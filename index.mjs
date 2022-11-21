@@ -7,13 +7,17 @@
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
-var beautifyHTML = require('js-beautify').html;
-var assign = require('object-assign');
-var _escaperegexp = require('lodash.escaperegexp');
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import jsBeautify from 'js-beautify';
+import _escaperegexp from 'lodash.escaperegexp';
+import babelRegister from '@babel/register';
+import {createRequire} from 'module'; // Bring in the ability to create the 'require' method
+const require = createRequire(import.meta.url); // construct the require method
 
-var DEFAULT_OPTIONS = {
+const beautifyHTML = jsBeautify.html;
+
+const DEFAULT_OPTIONS = {
   doctype: '<!DOCTYPE html>',
   beautify: false,
   transformViews: true,
@@ -29,15 +33,15 @@ var DEFAULT_OPTIONS = {
         },
       ],
     ],
-    plugins: ['@babel/transform-flow-strip-types'],
+    plugins: ['@babel/plugin-transform-flow-strip-types'],
   },
 };
 
-function createEngine(engineOptions) {
+export function createEngine(engineOptions) {
   var registered = false;
   var moduleDetectRegEx;
 
-  engineOptions = assign({}, DEFAULT_OPTIONS, engineOptions || {});
+  engineOptions = {...DEFAULT_OPTIONS, ...engineOptions}; //assign({}, DEFAULT_OPTIONS, engineOptions || {});
 
   function renderFile(filename, options, cb) {
     // Defer babel registration until the first request so we can grab the view path.
@@ -47,7 +51,7 @@ function createEngine(engineOptions) {
       moduleDetectRegEx = new RegExp(
         []
           .concat(options.settings.views)
-          .map(viewPath => '^' + _escaperegexp(viewPath))
+          .map((viewPath) => '^' + _escaperegexp(viewPath))
           .join('|')
       );
     }
@@ -55,9 +59,10 @@ function createEngine(engineOptions) {
     if (engineOptions.transformViews && !registered) {
       // Passing a RegExp to Babel results in an issue on Windows so we'll just
       // pass the view path.
-      require('@babel/register')(
-        assign({only: [].concat(options.settings.views)}, engineOptions.babel)
-      );
+      babelRegister({
+        only: [].concat(options.settings.views),
+        ...engineOptions.babel,
+      });
       registered = true;
     }
 
@@ -74,11 +79,13 @@ function createEngine(engineOptions) {
     } finally {
       if (options.settings.env === 'development') {
         // Remove all files from the module cache that are in the view folder.
-        Object.keys(require.cache).forEach(function(module) {
+        /*
+        Object.keys(require.cache).forEach(function (module) {
           if (moduleDetectRegEx.test(require.cache[module].filename)) {
             delete require.cache[module];
           }
         });
+        */
       }
     }
 
@@ -93,5 +100,3 @@ function createEngine(engineOptions) {
 
   return renderFile;
 }
-
-exports.createEngine = createEngine;

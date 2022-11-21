@@ -1,16 +1,17 @@
 {
   "name": "express-react-views",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "This is an Express view engine which renders React components on server. It renders static markup and *does not* support mounting those views on the client.",
   "keywords": [
     "express",
     "view engine",
     "react"
   ],
-  "main": "index.js",
+  "type": "module",
+  "main": "index.mjs",
   "scripts": {
-    "lint": "eslint --ext=js,jsx .",
-    "format": "prettier --write *.js package.json .eslintrc.js 'examples/**/*.{js,jsx,json}' 'test/*.{js,jsx,json}'",
+    "lint": "eslint --ext=mjs,jsx .",
+    "format": "prettier --write *.js *.mjs package.json .eslintrc.js 'examples/**/*.{js,jsx,json}' 'test/*.{js,jsx,json}'",
     "test": "node test",
     "test-on-travis": "yarn run test && yarn run lint"
   },
@@ -21,29 +22,29 @@
   },
   "license": "BSD-3-Clause",
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0"
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0 || ^18.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-transform-flow-strip-types": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/register": "^7.0.0",
-    "js-beautify": "^1.7.3",
+    "@babel/core": "^7.20.2",
+    "@babel/plugin-transform-flow-strip-types": "^7.19.0",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/register": "^7.18.9",
+    "js-beautify": "^1.14.7",
     "lodash.escaperegexp": "^4.1.2",
     "object-assign": "^4.1.1"
   },
   "devDependencies": {
-    "async": "^2.6.0",
-    "babel-eslint": "^10.0.1",
-    "create-react-class": "^15.6.3",
-    "eslint": "^5.6.1",
-    "eslint-plugin-prettier": "^3.0.0",
-    "prettier": "^1.10.2",
-    "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "@babel/eslint-parser": "^7.19.1",
+    "async": "^3.2.4",
+    "create-react-class": "^15.7.0",
+    "eslint": "^8.28.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "files": [
     "CHANGELOG.md",

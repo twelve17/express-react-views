@@ -1,6 +1,11 @@
-var assert = require('assert');
-var async = require('async');
-var viewEngine = require('..');
+import assert from 'assert';
+import async from 'async';
+import { createEngine } from '../index.mjs';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 var viewOptions = {
   settings: {
     env: 'development',
@@ -9,7 +14,7 @@ var viewOptions = {
 };
 
 function testComponent(path, cb) {
-  var render = viewEngine.createEngine();
+  var render = createEngine();
   render(path, viewOptions, function(err, source) {
     assert(!err, `Rendering ${path}: Did not throw`);
     assert.equal(
