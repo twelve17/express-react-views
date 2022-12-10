@@ -17,6 +17,8 @@ const require = createRequire(import.meta.url); // construct the require method
 
 const beautifyHTML = jsBeautify.html;
 
+export const LocalsContext = React.createContext({});
+
 const DEFAULT_OPTIONS = {
   doctype: '<!DOCTYPE html>',
   beautify: false,
@@ -33,7 +35,6 @@ const DEFAULT_OPTIONS = {
         },
       ],
     ],
-    plugins: ['@babel/plugin-transform-flow-strip-types'],
   },
 };
 
@@ -72,8 +73,20 @@ export function createEngine(engineOptions) {
       // Transpiled ES6 may export components as { default: Component }
       component = component.default || component;
       markup += ReactDOMServer.renderToStaticMarkup(
-        React.createElement(component, options)
+        React.createElement(
+          LocalsContext.Provider,
+          {value: options},
+          React.createElement(component, options)
+        )
       );
+
+      if (engineOptions.beautify) {
+        // NOTE: This will screw up some things where whitespace is important, and be
+        // subtly different than prod.
+        markup = beautifyHTML(markup);
+      }
+
+      cb(null, markup);
     } catch (e) {
       return cb(e);
     } finally {
@@ -88,14 +101,6 @@ export function createEngine(engineOptions) {
         */
       }
     }
-
-    if (engineOptions.beautify) {
-      // NOTE: This will screw up some things where whitespace is important, and be
-      // subtly different than prod.
-      markup = beautifyHTML(markup);
-    }
-
-    cb(null, markup);
   }
 
   return renderFile;

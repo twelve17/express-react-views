@@ -1,6 +1,7 @@
-var React = require('react');
-var PropTypes = require('prop-types');
-var createClass = require('create-react-class');
+import React from 'react';
+import PropTypes from 'prop-types';
+import createClass from 'create-react-class';
+import LocalsContext from '../';
 
 function countTo(n) {
   var a = [];
@@ -10,15 +11,17 @@ function countTo(n) {
   return a.join(', ');
 }
 
-var Index = createClass({
+export default Index = createClass({
   propTypes: {
     title: PropTypes.string,
   },
 
+
   render: function() {
+    <LocalsContext.Consumer>{function(locals) {
     return (
       <div>
-        <h1>{this.props.title}</h1>
+        <h1>{locals.title}</h1>
         <p>Welcome to {this.props.title}</p>
         <p>
           I can count to 10:
@@ -26,7 +29,6 @@ var Index = createClass({
         </p>
       </div>
     );
+    }}</LocalsContext.Consumer>
   },
 });
-
-module.exports = Index;

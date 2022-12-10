@@ -1,6 +1,6 @@
 {
   "name": "express-react-views",
-  "version": "0.11.1-1",
+  "version": "0.11.1-2",
   "description": "This is an Express view engine which renders React components on server. It renders static markup and *does not* support mounting those views on the client.",
   "keywords": [
     "express",
@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint --ext=mjs,jsx .",
     "format": "prettier --write *.js *.mjs package.json .eslintrc.js 'examples/**/*.{js,jsx,json}' 'test/*.{js,jsx,json}'",
-    "test": "node test",
+    "test": "node test/index.mjs",
     "test-on-travis": "yarn run test && yarn run lint"
   },
   "author": "Paul O’Shannessy <paul@oshannessy.com>",

@@ -6,7 +6,8 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-var viewOptions = {
+const viewOptions = {
+  locals: { mainTitle: 'Testing' },
   settings: {
     env: 'development',
     views: __dirname,
@@ -14,9 +15,11 @@ var viewOptions = {
 };
 
 function testComponent(path, cb) {
-  var render = createEngine();
-  render(path, viewOptions, function(err, source) {
-    assert(!err, `Rendering ${path}: Did not throw`);
+
+  const renderFile = createEngine();
+  renderFile(path, viewOptions, function (err, source) {
+    console.error('Error rendering: ', err);
+    assert(!err, `Rendering ${path} threw error: ${err}`);
     assert.equal(
       source,
       '<!DOCTYPE html><div><h1></h1><p>Welcome to </p><p>I can count to 10:1, 2, 3, 4, 5, 6, 7, 8, 9, 10</p></div>',
