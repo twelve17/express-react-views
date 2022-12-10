@@ -1,19 +1,14 @@
-const React = require('react');
-const PropTypes = require('prop-types');
+import React from 'react';
+import PropTypes from  'prop-types';
 
-function countTo(n) {
-  var a = [];
-  for (var i = 0; i < n; i++) {
-    a.push(i + 1);
-  }
-  return a.join(', ');
-}
+import { LocalsContext } from '../locals-context.mjs';
+import { countTo } from './count-to.mjs';
 
 class Index extends React.Component {
   render() {
     return (
       <div>
-        <h1>{this.props.title}</h1>
+        <h1>{this.context.locals.mainTitle}</h1>
         <p>Welcome to {this.props.title}</p>
         <p>
           I can count to 10:
@@ -28,4 +23,6 @@ Index.propTypes = {
   title: PropTypes.string,
 };
 
-module.exports = Index;
+Index.contextType = LocalsContext;
+
+export default Index;
