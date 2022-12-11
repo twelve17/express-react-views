@@ -9,6 +9,10 @@
   ],
   "type": "module",
   "main": "index.mjs",
+  "exports": {
+    ".":"./index.mjs",
+    "./locals-context": "./locals-context.mjs"
+  },
   "scripts": {
     "lint": "eslint --ext=mjs,jsx .",
     "format": "prettier --write *.js *.mjs package.json .eslintrc.js 'examples/**/*.{js,jsx,json}' 'test/*.{js,jsx,json}'",
@@ -48,7 +52,8 @@
   },
   "files": [
     "CHANGELOG.md",
-    "index.js",
+    "index.mjs",
+    "locals-context.mjs",
     "LICENSE",
     "package.json",
     "PATENTS",

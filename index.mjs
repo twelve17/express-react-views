@@ -9,11 +9,16 @@
 
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import path from 'path';
 import jsBeautify from 'js-beautify';
 import _escaperegexp from 'lodash.escaperegexp';
 import babelRegister from '@babel/register';
+import {fileURLToPath} from 'url';
 import {createRequire} from 'module'; // Bring in the ability to create the 'require' method
 const require = createRequire(import.meta.url); // construct the require method
+
+const filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(filename);
 
 const beautifyHTML = jsBeautify.html;
 
@@ -42,7 +47,7 @@ export function createEngine(engineOptions) {
 
   engineOptions = {...DEFAULT_OPTIONS, ...engineOptions}; //assign({}, DEFAULT_OPTIONS, engineOptions || {});
 
-  function renderFile(filename, options, cb) {
+  async function renderFile(filename, options, cb) {
     // Defer babel registration until the first request so we can grab the view path.
     if (!moduleDetectRegEx) {
       // Path could contain regexp characters so escape it first.
@@ -56,16 +61,20 @@ export function createEngine(engineOptions) {
     }
 
     if (engineOptions.transformViews && !registered) {
+      console.error('HIIIIII');
       // Passing a RegExp to Babel results in an issue on Windows so we'll just
       // pass the view path.
       babelRegister({
-        only: [].concat(options.settings.views),
+        only: [path.join(__dirname, 'locals-context.mjs')].concat(
+          options.settings.views
+        ),
         ...engineOptions.babel,
       });
       registered = true;
     }
 
     try {
+      // var {LocalsContext} = require('./locals-context.cjs');
       var LocalsContext = require('./locals-context.mjs').LocalsContext;
 
       var markup = engineOptions.doctype;
