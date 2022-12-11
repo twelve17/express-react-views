@@ -61,7 +61,6 @@ export function createEngine(engineOptions) {
     }
 
     if (engineOptions.transformViews && !registered) {
-      console.error('HIIIIII');
       // Passing a RegExp to Babel results in an issue on Windows so we'll just
       // pass the view path.
       babelRegister({
@@ -74,7 +73,9 @@ export function createEngine(engineOptions) {
     }
 
     try {
-      // var {LocalsContext} = require('./locals-context.cjs');
+      // LocalsContext must be "require"d here instead of via
+      // import at the beginning of the file, since views
+      // will be also loading the consumer this way.
       var LocalsContext = require('./locals-context.mjs').LocalsContext;
 
       var markup = engineOptions.doctype;
