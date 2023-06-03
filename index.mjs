@@ -13,9 +13,9 @@ import path from 'path';
 import jsBeautify from 'js-beautify';
 import _escaperegexp from 'lodash.escaperegexp';
 import babelRegister from '@babel/register';
-import {fileURLToPath} from 'url';
-import {createRequire} from 'module'; // Bring in the ability to create the 'require' method
-const require = createRequire(import.meta.url); // construct the require method
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module'; // Bring in the ability to create the 'require' method
+// const require = createRequire(import.meta.url); // construct the require method
 
 const filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(filename);
@@ -41,11 +41,18 @@ const DEFAULT_OPTIONS = {
   },
 };
 
+/**
+ * 
+ * Using a node loader won't work with jest, {@link https://github.com/jestjs/jest/issues/11786#issuecomment-907136701|per this thread}.
+ * 
+ * @param {*} engineOptions 
+ * @returns 
+ */
 export function createEngine(engineOptions) {
   var registered = false;
   var moduleDetectRegEx;
 
-  engineOptions = {...DEFAULT_OPTIONS, ...engineOptions}; //assign({}, DEFAULT_OPTIONS, engineOptions || {});
+  engineOptions = { ...DEFAULT_OPTIONS, ...engineOptions }; //assign({}, DEFAULT_OPTIONS, engineOptions || {});
 
   async function renderFile(filename, options, cb) {
     // Defer babel registration until the first request so we can grab the view path.
@@ -76,17 +83,20 @@ export function createEngine(engineOptions) {
       // LocalsContext must be "require"d here instead of via
       // import at the beginning of the file, since views
       // will be also loading the consumer this way.
-      var LocalsContext = require('./locals-context.mjs').LocalsContext;
+      var { LocalsContext } = await import('./locals-context.mjs');
 
       var markup = engineOptions.doctype;
-      var component = require(filename);
+      var component = await import(filename);
 
       // Transpiled ES6 may export components as { default: Component }
-      component = component.default || component;
+      if (component.default) {
+        const { default: blah } = await import(filename);
+        component = blah;
+      }
       markup += ReactDOMServer.renderToStaticMarkup(
         React.createElement(
           LocalsContext.Provider,
-          {value: options},
+          { value: options },
           React.createElement(component, options)
         )
       );
@@ -100,6 +110,7 @@ export function createEngine(engineOptions) {
       cb(null, markup);
     } catch (e) {
       return cb(e);
+      /*
     } finally {
       if (options.settings.env === 'development') {
         // Remove all files from the module cache that are in the view folder.
@@ -109,6 +120,7 @@ export function createEngine(engineOptions) {
           }
         });
       }
+      */
     }
   }
 
