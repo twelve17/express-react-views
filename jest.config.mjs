@@ -4,14 +4,12 @@
  */
 
 export default {
-  testMatch: [
-    "**/test/**/*.test.mjs"
-  ],
+  testMatch: ['**/test/**/*.test.mjs'],
 
   // A map from regular expressions to paths to transformers
   // transform: undefined,
   transform: {
-    "^.+\\.jsx$": "babel-jest",
+    '^.+\\.jsx$': 'babel-jest',
   },
 
   // https://jestjs.io/docs/next/configuration#extensionstotreatasesm-arraystring
