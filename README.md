@@ -37,12 +37,12 @@ app.engine('jsx', require('express-react-views').createEngine());
 
 Beginning with v0.2, you can now pass options in when creating your engine.
 
-option | values | default
--------|--------|--------
-`doctype` | any string that can be used as [a doctype](http://en.wikipedia.org/wiki/Document_type_declaration), this will be prepended to your document | `"<!DOCTYPE html>"`
-`beautify` | `true`: beautify markup before outputting (note, this can affect rendering due to additional whitespace) | `false`
-`transformViews` | `true`: use `babel` to apply JSX, ESNext transforms to views.<br>**Note:** if already using `babel-register` in your project, you should set this to `false` | `true`
-`babel` | any object containing valid Babel options<br>**Note:** does not merge with defaults | `{presets: ['@babel/preset-react', [ '@babel/preset-env', {'targets': {'node': 'current'}}]]}`
+| option           | values                                                                                                                                                       | default                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `doctype`        | any string that can be used as [a doctype](http://en.wikipedia.org/wiki/Document_type_declaration), this will be prepended to your document                  | `"<!DOCTYPE html>"`                                                                            |
+| `beautify`       | `true`: beautify markup before outputting (note, this can affect rendering due to additional whitespace)                                                     | `false`                                                                                        |
+| `transformViews` | `true`: use `babel` to apply JSX, ESNext transforms to views.<br>**Note:** if already using `babel-register` in your project, you should set this to `false` | `true`                                                                                         |
+| `babel`          | any object containing valid Babel options<br>**Note:** does not merge with defaults                                                                          | `{presets: ['@babel/preset-react', [ '@babel/preset-env', {'targets': {'node': 'current'}}]]}` |
 
 The defaults are sane, but just in case you want to change something, here's how it would look:
 
@@ -172,3 +172,8 @@ All "locals" are exposed to your view in `this.props`. These should work identic
 [babel-preset-env]: https://babeljs.io/docs/plugins/preset-env/
 [zpao]: https://github.com/zpao
 [svenkatreddy]: https://github.com/svenkatreddy
+
+
+## Notes
+
+- Jest does not support module loaders (see [this thread](https://github.com/jestjs/jest/issues/11786#issuecomment-90713670)). Therefore it just use `babel-jest` to do the transpilation instead.

@@ -1,18 +1,13 @@
-
-const otherPresets = [
+const presets = [
   '@babel/preset-react',
   [
     '@babel/preset-env',
     {
-      modules: 'auto',
       targets: {
-        esmodules: true,
         node: 'current',
       },
     },
   ],
 ];
 
-module.exports = {
-  presets: otherPresets,
-};
+module.exports = {presets};

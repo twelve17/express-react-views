@@ -13,9 +13,7 @@ import path from 'path';
 import jsBeautify from 'js-beautify';
 import _escaperegexp from 'lodash.escaperegexp';
 import babelRegister from '@babel/register';
-import { fileURLToPath } from 'url';
-import { createRequire } from 'module'; // Bring in the ability to create the 'require' method
-// const require = createRequire(import.meta.url); // construct the require method
+import {fileURLToPath} from 'url';
 
 const filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(filename);
@@ -42,17 +40,14 @@ const DEFAULT_OPTIONS = {
 };
 
 /**
- * 
- * Using a node loader won't work with jest, {@link https://github.com/jestjs/jest/issues/11786#issuecomment-907136701|per this thread}.
- * 
- * @param {*} engineOptions 
- * @returns 
+ * @param {*} engineOptions
+ * @returns {function} renderFile
  */
 export function createEngine(engineOptions) {
   var registered = false;
   var moduleDetectRegEx;
 
-  engineOptions = { ...DEFAULT_OPTIONS, ...engineOptions }; //assign({}, DEFAULT_OPTIONS, engineOptions || {});
+  engineOptions = {...DEFAULT_OPTIONS, ...engineOptions}; //assign({}, DEFAULT_OPTIONS, engineOptions || {});
 
   async function renderFile(filename, options, cb) {
     // Defer babel registration until the first request so we can grab the view path.
@@ -83,20 +78,20 @@ export function createEngine(engineOptions) {
       // LocalsContext must be "require"d here instead of via
       // import at the beginning of the file, since views
       // will be also loading the consumer this way.
-      var { LocalsContext } = await import('./locals-context.mjs');
+      var {LocalsContext} = await import('./locals-context.mjs');
 
       var markup = engineOptions.doctype;
       var component = await import(filename);
 
       // Transpiled ES6 may export components as { default: Component }
       if (component.default) {
-        const { default: blah } = await import(filename);
+        const {default: blah} = await import(filename);
         component = blah;
       }
       markup += ReactDOMServer.renderToStaticMarkup(
         React.createElement(
           LocalsContext.Provider,
-          { value: options },
+          {value: options},
           React.createElement(component, options)
         )
       );
